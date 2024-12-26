@@ -1,8 +1,8 @@
 export default function RightSection() {
     return(
-        <div className="bg-slate-200 basis-3/4">
-            <div className="bg-slate-500">
-                <h1>Read Quran</h1>
+        <div className="bg-teal-100 basis-3/4">
+            <div className="bg-teal-600">
+                <h1>SiQuran</h1>
             </div>
         </div>
     )
