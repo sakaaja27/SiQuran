@@ -7,6 +7,7 @@ import '../../index.css';
 
 export default function Read(){
     const [listSurah, setListSurah] = useState([]);
+    const [detailSurah, setDetailSurah] = useState({});
     useEffect(() => {
         getSurah();
     },[]);
@@ -16,12 +17,18 @@ export default function Read(){
         setListSurah(surah);
     }
 
+    async function getDetailSurah(nomor){
+        const detailSurah = await QuranApi.getDetailSurah(nomor);
+        setDetailSurah(detailSurah);
+        console.log(detailSurah);
+    }
+
     return(
         <div className="bg-slate-500 flex w-full h-screen">
             {/* bagian kiri */}
-            <LeftSection listSurah={listSurah}/>
+            <LeftSection listSurah={listSurah} getDetailSurah={getDetailSurah}/>
             {/* bagian kanan */}
-              <RightSection/>
+              <RightSection detailSurah={detailSurah}/>
         </div>
     )
 }
