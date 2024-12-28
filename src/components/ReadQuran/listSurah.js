@@ -35,10 +35,10 @@ function ItemSurah({ nomor, namaArab, namaSurah, artiSurah, jumlahAyat, tempatTu
 
     return (
         <div
-            className={`h-[85px] w-full border-b-2 rounded-md p-2 border-teal-500 flex mb-2 cursor-pointer 
-                ${isSelected ? 'bg-cyan-400' : 'bg-white'} 
-                ${isSelected ? 'text-white' : 'text-teal-700'} 
-                hover:${isSelected ? 'text-white' : 'text-teal-700'}`} 
+            className={`h-[85px] w-full border-b-2 rounded-md p-2 border-green-500 flex mb-2 cursor-pointer 
+                ${isSelected ? 'bg-teal-400' : 'bg-white'} 
+                ${isSelected ? 'text-white' : 'text-green-700'} 
+                hover:${isSelected ? 'text-white' : 'text-green-700'}`} 
             onClick={handleCardClick}>
             <div className="basis-9 flex justify-end mr-3">
                 <h3 className={`font-bold outline-star`}>{nomor}</h3>

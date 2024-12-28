@@ -1,36 +1,65 @@
 import React, { useEffect, useState } from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import Read from '../readQuran';
+
 
 export default function Dashboard() {
-    const [currentComponent, setCurrentComponent] = useState('main'); 
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const renderComponent = () => {
+    // buat ketika refresh ga blik ke dash lagi
+    const [currentComponent, setCurrentComponent] = useState(() => {
+        // Cek path dari URL
+        const pathMap = {
+            '/dashboard/read': 'read',
+            '/dashboard/bookmark': 'bookmark',
+            '/dashboard/settings': 'settings',
+            '/dashboard': 'dashboard',
+            '/': 'dashboard'
+        };
+        return pathMap[location.pathname] || 'dashboard';
+    }); 
+
+    useEffect(() => {
+        // Update localStorage
+        localStorage.setItem('currentComponent', currentComponent);
+        
+        // Update URL berdasarkan currentComponent
         switch (currentComponent) {
             case 'read':
-                return <Read />; 
-            case 'main':
+                navigate('/dashboard/read');
+                break;
+            case 'bookmark':
+                navigate('/dashboard/bookmark');
+                break;
+            case 'settings':
+                navigate('/dashboard/settings');
+                break;
             default:
-                return (
-                    <>
-                    <Header/>
-                    <MainContent/>
-                    <Button setCurrentComponent={setCurrentComponent} />
-                    </>
-                );
+                navigate('/dashboard');
         }
+    }, [currentComponent, navigate]);
+
+    const renderMainContent = () => {
+        return (
+            <>
+                <Header/>
+                <MainContent/>
+                <Button setCurrentComponent={setCurrentComponent} />
+            </>
+        );
     };
     return (
         <>
             <div
                 className="flex flex-col h-screen bg-cover bg-center hidden md:block"
                 style={{ backgroundImage: `url('/assets/bg.png')` }}>
-                {renderComponent()}
+                {currentComponent === 'dashboard' ? renderMainContent() : <Outlet />}
             </div>
             <div
                 className="flex flex-col h-screen bg-gradient-to-b from-[#61ab48] to-[#273039] md:hidden">
-                {renderComponent()}
+                 {currentComponent === 'dashboard' ? renderMainContent() : <Outlet />}  
             </div>
         </>
     );
@@ -94,41 +123,24 @@ function Button({setCurrentComponent}){
 
     const handleButtonClick = (buttonName) => {
         setSelectedButton(buttonName);
-        if (buttonName === 'read') {
-            setCurrentComponent('read');
-        }
+        setCurrentComponent(buttonName);
     };
     return(
-        <div className="w-full flex flex-col md:flex-row md:justify-start items-center md:items-start space-y-2 md:space-y-0 md:space-x-2">
-            <div className="w-full md:w-auto md:ml-40 flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
-                <button className={`font-semibold px-4 py-2 rounded-full w-full md:w-auto ${selectedButton === 'read' ? 'bg-white text-green-400' : 'bg-green-400 text-white'} hover:bg-white hover:text-green-400`} onClick={() => handleButtonClick('read')}>
+        <div className="w-full flex flex-col items-center md:flex-row md:justify-start md:items-start space-y-2 md:space-y-0 md:space-x-2">
+            <div className="w-auto flex flex-col md:ml-40 md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                <button className={`font-semibold px-4 py-2 rounded-full w-48 md:w-auto ${selectedButton === 'read' ? 'bg-white text-green-400' : 'bg-green-400 text-white'} hover:bg-white hover:text-green-400`} onClick={() => handleButtonClick('read')}>
                     Read Quran
                 </button>
-                <button className={`font-semibold px-4 py-2 rounded-full w-full md:w-auto ${selectedButton === 'bookmark' ? 'bg-white text-green-400' : 'bg-green-400 text-white'} hover:bg-white hover:text-green-400`} onClick={() => handleButtonClick('bookmark')}>
+                <button className={`font-semibold px-4 py-2 rounded-full w-48 md:w-auto ${selectedButton === 'bookmark' ? 'bg-white text-green-400' : 'bg-green-400 text-white'} hover:bg-white hover:text-green-400`} onClick={() => handleButtonClick('bookmark')}>
                     Bookmark
                 </button>
-                <button className={`font-semibold px-4 py-2 rounded-full w-full md:w-auto mb-4 md:mb-0 ${selectedButton === 'settings' ? 'bg-white text-green-400' : 'bg-green-400 text-white'} hover:bg-white hover:text-green-400`} onClick={() => handleButtonClick('settings')}>
+                {/* <button className={`font-semibold px-4 py-2 rounded-full w-48 md:w-auto mb-4 md:mb-0 ${selectedButton === 'settings' ? 'bg-white text-green-400' : 'bg-green-400 text-white'} hover:bg-white hover:text-green-400`} onClick={() => handleButtonClick('settings')}>
                     Settings
-                </button>
+                </button> */}
             </div>
         </div>
     )
 }
 
-function InputSearch(){
-    return (
-        <div className="p-4 w-full max-w-md relative">
-            <img 
-                src="https://img.icons8.com/color/search" 
-                alt="search" 
-                className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5" 
-            />
-            <input 
-                type="text" 
-                placeholder="Search Surah" 
-                className="w-full bg-teal-100 border-2 border-teal-700 rounded-full p-2 pl-10 text-slate-500" 
-            />
-        </div>
-    )
-}
+
 
