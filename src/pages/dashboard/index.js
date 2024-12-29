@@ -95,13 +95,13 @@ function MainContent() {
                 <div className="flex flex-col md:flex-row items-center justify-center text-center md:text-left mb-8 ">
                     <div className="mb-6 md:mr-8">
                         <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 md:mr-32" data-aos="fade-up-right">
-                            Read Quran Everyday.
+                            Selalu Baca Quran.
                         </h2>
                         <h2 className="text-3xl md:text-5xl font-semibold text-white mb-2 md:mr-32" data-aos="fade-up-right">
-                            Add On Your Daily
+                            Di mana pun, kapan pun.
                         </h2>
                         <h2 className="text-3xl md:text-5xl font-semibold text-white md:mr-32" data-aos="fade-up-right">
-                            Routine
+                            Ayo Ngaji!
                         </h2>
                     </div>
                     <div className="flex items-center mb-6 md:mb-0 " data-aos="fade-up-left">

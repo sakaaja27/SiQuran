@@ -17,5 +17,15 @@ export const QuranApi = {
         } catch (error) {
             console.log(error);
         }
+    },
+
+    getDetailTafsir: async function (nomor){
+        try {
+            const response = await fetch(`https://equran.id/api/tafsir/${nomor}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.log(error);
+        }
     }
 };

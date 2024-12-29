@@ -2,8 +2,43 @@ import { FcUpRight } from "react-icons/fc";
 import { FcMusic } from "react-icons/fc";
 import { FcMediumPriority } from "react-icons/fc";
 import { useEffect, useRef, useState } from 'react';
+
 import 'aos/dist/aos.css';
-export default function RightSection({detailSurah}) {
+import ItemAyat from "./itemAyat";
+export default function RightSection({detailSurah ,detailTafsir}) {
+    const [onBookmark, setOnBookmark] = useState({});
+
+    function setBookmark(value) {
+        const bookmark = localStorage.getItem('bookmark');
+
+        const ayatTafsir = detailTafsir.tafsir.find(
+            (item) => item.ayat === value.nomor
+        );
+
+        const namaSurah = detailSurah.nama_latin || "Surah tidak ada";
+
+        const bookmarkData = {
+            ...value,
+            tafsir: ayatTafsir ? ayatTafsir.tafsir : "Tafsir tidak tersedia",
+            namaSurah: namaSurah,
+
+        }
+
+        if (bookmark && JSON.parse(bookmark)["id"] === value.id) {
+            setOnBookmark({});
+            return localStorage.removeItem('bookmark');
+        }
+        localStorage.setItem('bookmark', JSON.stringify(bookmarkData));
+        setOnBookmark(bookmarkData);
+    }
+
+    useEffect(() => {
+        const bookmark = localStorage.getItem('bookmark');
+        if (bookmark) {
+            setOnBookmark(bookmark);
+        }
+        
+    },[]);
     return(
         <div className="bg-green-50 w-full h-full flex flex-col overflow-hidden" >
             {/*  judul */}
@@ -17,15 +52,20 @@ export default function RightSection({detailSurah}) {
             {/* list ayat */}
             <div className="w-full flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-green-500 scrollbar-track-green-100">
                 {
+                    
                     detailSurah.ayat ? detailSurah.ayat.map((dataayat,index) => (
                         <ItemAyat 
                             key={index} 
-                            ayat={dataayat.ar} 
-                            nomorAyat={dataayat.nomor} 
-                            artiAyat={dataayat.idn} 
-                            ayatLatin={dataayat.tr} 
+                            dataayat={dataayat}
+                            
                             voiceSurah={dataayat.audio}
+                            surahNomor={detailSurah.nomor}
+                            detailTafsir={detailTafsir}
+                            nomorAyat={dataayat.nomor}
+                            setBookmark={setBookmark}
+                            onBookmark={onBookmark}
                         />
+                        
                     )) : null
                 }
             </div>
@@ -78,7 +118,7 @@ function Header({namaSurah , namaArab , voiceSurah}) {
         <div className="md:mx-4 mx-4 my-2 h-[70px] min-h-[70px] max-h-[70px] flex items-center justify-between px-9 border-b-2 bg-green-200 rounded-md shadow-md mb-4">
             <h3 className="mx-8 text-green-700 font-bold text-3xl md:text-3xl sm:text-xl text-xl flex items-center " >
                 {namaSurah ? (
-                    `${namaArab} , ${namaSurah}`
+                    `${namaArab} , ${namaSurah}` 
                 ) : (
                     <>
                         <img 
@@ -114,16 +154,3 @@ function Header({namaSurah , namaArab , voiceSurah}) {
     )
 }
 
-function ItemAyat({ ayat, nomorAyat, ayatLatin, artiAyat }) {
-    return (
-        <div className="mx-4 my-2 p-4 border border-green-500 rounded-md shadow-md bg-white hover:bg-green-100 transition duration-200 ease-in-out">
-            <div className="flex justify-end mb-3">
-                <h3 className="text-2xl font-bold text-green-700">{ayat}</h3>
-            </div>
-            <div className="flex justify-end mb-5">
-                <h5 className="text-sm font-bold text-green-600">{ayatLatin}</h5>
-            </div>
-            <span className="text-sm font-light text-green-800">{nomorAyat} . {artiAyat}</span>
-        </div>
-    );
-}
